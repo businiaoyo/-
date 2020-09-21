@@ -1,0 +1,24 @@
+function scheduleHtmlProvider(iframeContent = "", frameContent = "", dom = document) {
+    //除函数名外都可编辑
+    //以下为示例，您可以完全重写或在此基础上更改
+    //通过ifrs和frs定位到包含课表的内容中就可以了，实际上，这个函数我就改了"main"和"ExportA"。
+const ifrs = dom.getElementsByTagName("main");
+const frs = dom.getElementsByTagName("ExportA");
+
+if (ifrs.length) {
+    for (let i = 0; i < ifrs.length; i++) {
+        const dom = ifrs[i].contentWindow.document;
+        iframeContent += scheduleHtmlProvider(iframeContent, frameContent, dom);
+        }
+} 
+if (frs.length) {
+    for (let i = 0; i < frs.length; i++) {
+        const dom = frs[i].contentDocument.body.parentElement;
+        frameContent += scheduleHtmlProvider(iframeContent, frameContent, dom);
+        }
+} 
+if(!ifrs.length && !frs.length){
+    return dom.querySelector('body').outerHTML
+}
+return dom.getElementsByTagName('html')[0].innerHTML + iframeContent+frameContent  
+}
